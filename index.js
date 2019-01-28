@@ -96,7 +96,7 @@ const transaction = (order, customer, options) => {
                 res = res["ncresponse"]["$"];
                 resolve({
                     errorCode: res.NCERROR,
-                    status: res.STATUS,
+                    status: parseInt(res.STATUS),
                     orderId: res.orderID,
                     payId: res.PAYID
                 });
