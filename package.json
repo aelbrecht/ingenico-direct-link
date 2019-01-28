@@ -15,5 +15,11 @@
   "bugs": {
     "url": "https://github.com/aelbrecht/ingenico-direct-link/issues"
   },
-  "homepage": "https://github.com/aelbrecht/ingenico-direct-link#readme"
+  "homepage": "https://github.com/aelbrecht/ingenico-direct-link#readme",
+  "dependencies": {
+    "request": "^2.88.0",
+    "request-promise": "^4.2.2",
+    "sha1": "^1.1.1",
+    "xml2js": "^0.4.19"
+  }
 }
