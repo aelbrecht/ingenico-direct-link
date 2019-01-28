@@ -3,15 +3,40 @@ const sha1 = require('sha1');
 const xml2js = require('xml2js');
 
 /**
- *
- * @param order
- * @param customer
- * @param options
- * @returns {Promise<any>}
+ * @param order - Order related parameters
+ * @param order.orderId - Merchant order ID
+ * @param order.amount - Amount of the payment x100
+ * @param order.currency - Currency code of the payment
+ * @param order.cardNumber - Card number of the debit- or credit-card
+ * @param order.cardExpire - Expire date in form MM/YY or MMYY
+ * @param order.description - Optional comment/reason for transaction
+ * @param order.CVC - CVC code
+ * @param order.operation - Operation code, see Ingenico docs
+ * @param order.ECI - Electronic Commerce Indicator, see Ingenico docs
+ * @param order.COF - Credential-on-file initiator, see Ingenico docs
+ * @param customer - Optional customer fields
+ * @param customer.name - First and last name
+ * @param customer.email - Email of customer
+ * @param customer.address - Street and number
+ * @param customer.town - Town or city
+ * @param customer.zip - Zip code
+ * @param customer.country - Country code
+ * @param customer.phone - Phone number
+ * @param customer.remoteAddress - Optional remote address for verification
+ * @param options - Platform options
+ * @param options.pspId
+ * @param options.userId
+ * @param options.password
+ * @param options.shaIn - optional
+ * @param options.url - production or test API address
+ * @returns {Promise<{payId,errorCode,status,orderId}>}
  */
 const transaction = (order, customer, options) => {
 
-    if (!options.pspId || !options.userId || !options.password) {
+    if (customer === undefined)
+        customer = {};
+
+    if (!options.pspId || !options.userId || !options.password || !options.url) {
         throw "Invalid options.";
     }
 
@@ -68,7 +93,13 @@ const transaction = (order, customer, options) => {
             xml2js.parseString(body, (err, res) => {
                 if (err)
                     reject(err);
-                resolve(res);
+                res = res["ncresponse"]["$"];
+                resolve({
+                    errorCode: res.NCERROR,
+                    status: res.STATUS,
+                    orderId: res.orderID,
+                    payId: res.PAYID
+                });
             });
         }).catch(err => reject(err));
     })
