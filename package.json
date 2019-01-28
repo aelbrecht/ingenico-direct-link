@@ -1,0 +1,19 @@
+{
+  "name": "ingenico-direct-link",
+  "version": "0.0.1",
+  "description": "JavaScript Wrapper for Ingenico ePayments DirectLink",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/aelbrecht/ingenico-direct-link.git"
+  },
+  "author": "Rudolf Aelbrecht",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/aelbrecht/ingenico-direct-link/issues"
+  },
+  "homepage": "https://github.com/aelbrecht/ingenico-direct-link#readme"
+}
