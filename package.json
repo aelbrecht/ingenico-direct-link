@@ -1,6 +1,6 @@
 {
   "name": "ingenico-direct-link",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "JavaScript Wrapper for Ingenico ePayments DirectLink",
   "main": "index.js",
   "scripts": {

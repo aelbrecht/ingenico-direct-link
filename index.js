@@ -10,28 +10,36 @@ const xml2js = require('xml2js');
  * @returns {Promise<any>}
  */
 const transaction = (order, customer, options) => {
+
+    if (!options.pspId || !options.userId || !options.password) {
+        throw "Invalid options.";
+    }
+
+    if (!order.orderId || !order.amount || !order.currency || !order.cardNumber || !order.cardExpire || !order.CVC || !order.operation)
+        throw "Invalid order";
+
     let form = {
-        PSPID: options.pspid,
-        ORDERID: order.orderId,
+        PSPID: options.pspId,
         USERID: options.userId,
         PSWD: options.password,
+        ORDERID: order.orderId,
         AMOUNT: order.amount,
         CURRENCY: order.currency,
         CARDNO: order.cardNumber,
         ED: order.cardExpire,
         COM: order.description,
+        CVC: order.CVC,
+        OPERATION: order.operation,
+        ECI: order.ECI,
+        COF_INITIATOR: order.COF,
         CN: customer.name,
         EMAIL: customer.email,
-        CVC: order.cardCVC,
-        OPERATION: order.operation,
         OWNERADDRESS: customer.address,
         OWNERZIP: customer.zip,
         OWNERTOWN: customer.town,
         OWNERCTY: customer.country,
         OWNERTELNO: customer.phone,
-        REMOTE_ADDR: customer.remoteAddress,
-        ECI: order.eci,
-        COF_INITIATOR: order.cof,
+        REMOTE_ADDR: customer.remoteAddress ? customer.remoteAddress : "NONE"
     };
 
     function generateShaSign(form) {
@@ -39,7 +47,9 @@ const transaction = (order, customer, options) => {
         for (let key in form) {
             if (!form.hasOwnProperty(key))
                 continue;
-            kvPairs.push(key.toUpperCase() + "=" + form[key] + process.env.INGENICO_SHAIN);
+            if (form[key] === undefined || (typeof (form[key]) === "string" && form[key].length === 0))
+                continue;
+            kvPairs.push(key.toUpperCase() + "=" + form[key] + options.shaIn);
         }
         return sha1(kvPairs.sort().join(""));
     }
@@ -49,7 +59,7 @@ const transaction = (order, customer, options) => {
     return new Promise((resolve, reject) => {
         rp({
             method: 'POST',
-            uri: process.env.INGENICO_URL,
+            uri: options.url,
             form: form,
             headers: {
                 'content-type': 'application/x-www-form-urlencoded'
@@ -63,3 +73,5 @@ const transaction = (order, customer, options) => {
         }).catch(err => reject(err));
     })
 };
+
+module.exports = transaction;
