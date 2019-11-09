@@ -17,9 +17,10 @@
   },
   "homepage": "https://github.com/aelbrecht/ingenico-direct-link#readme",
   "dependencies": {
+    "npm-check-updates": "^3.2.1",
     "request": "^2.88.0",
-    "request-promise": "^4.2.2",
+    "request-promise": "^4.2.5",
     "sha1": "^1.1.1",
-    "xml2js": "^0.4.19"
+    "xml2js": "^0.4.22"
   }
 }
